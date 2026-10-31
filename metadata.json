@@ -1,0 +1,6 @@
+{
+  "name": "Strat Analytics",
+  "description": "Venture intelligence and ARR modeling platform to validate ideas, track founder signals, and scout market opportunities.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Strat Analytics • Venture Intelligence & Portfolio Web Dashboard</title>
+  <style>
+    :root {
+      --bg-base: #0B0F17;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #161F30;
+      --bg-surface-hover: #1E293B;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(16, 185, 129, 0.35);
+      --primary: #10B981;
+      --primary-glow: rgba(16, 185, 129, 0.2);
+      --primary-light: #34D399;
+      --secondary: #6366F1;
+      --secondary-light: #818CF8;
+      --accent-blue: #3B82F6;
+      --accent-amber: #F59E0B;
+      --accent-rose: #F43F5E;
+      --text-main: #F9FAFB;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.5);
+      --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.25);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    header.top-nav {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #10B981, #6366F1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-title .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.4rem;
+      background: var(--bg-surface-elevated);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-tab-btn.active {
+      background: var(--primary);
+      color: #052E16;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .action-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .action-btn.btn-primary {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #FFF;
+      border: none;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .action-btn.btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .user-pill-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      padding: 3px 12px 3px 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .user-pill-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .user-avatar-mini {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--primary);
+    }
+
+    /* Container */
+    .app-container {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem 1.25rem;
+      flex: 1;
+    }
+
+    /* Executive Hero Header */
+    .executive-hero {
+      background: linear-gradient(135deg, #111827 0%, #161F30 50%, #0F172A 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .executive-hero::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.5rem;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid var(--primary);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .hero-info h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .hero-info .title-badge {
+      font-size: 0.72rem;
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--secondary-light);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .hero-bio {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      max-width: 650px;
+    }
+
+    .target-arr-card {
+      background: rgba(11, 15, 23, 0.65);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      min-width: 260px;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .target-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .target-arr-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-light);
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .target-subtext {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .progress-track {
+      height: 7px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      margin: 8px 0 6px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10B981, #34D399);
+      border-radius: 999px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .target-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* KPI Summary Row */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kpi-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-delta {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Filters and Toolbar */
+    .toolbar-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 0.85rem;
+      align-items: center;
+    }
+
+    .search-input-box {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input-box input {
+      width: 100%;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 9px 12px 9px 38px;
+      color: #FFF;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .search-input-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-input-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .select-dropdown {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      color: #FFF;
+      font-size: 0.85rem;
+      outline: none;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .pills-scroll {
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 3px;
+    }
+
+    .pill-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .pill-btn:hover {
+      color: #FFF;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .pill-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--primary);
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    /* Views container */
+    .view-content {
+      display: none;
+    }
+
+    .view-content.active {
+      display: block;
+    }
+
+    /* Grid of Venture Cards */
+    .ventures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .venture-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .venture-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: var(--shadow-md);
+    }
+
+    .venture-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .badge-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .stage-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stage-discovered { background: rgba(148, 163, 184, 0.15); color: #94A3B8; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .stage-validating { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .stage-prototyping { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .stage-mvp { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .stage-inmarket { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(99, 102, 241, 0.3)); color: #6EE7B7; border: 1px solid #10B981; }
+
+    .market-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .market-blue { background: rgba(14, 165, 233, 0.15); color: #38BDF8; border: 1px solid rgba(14, 165, 233, 0.3); }
+    .market-red { background: rgba(244, 63, 94, 0.15); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    .score-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--primary-light);
+      flex-shrink: 0;
+    }
+
+    .venture-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #FFF;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .venture-tagline {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .venture-metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      background: rgba(11, 15, 23, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.85rem;
+    }
+
+    .vm-item label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .vm-item span {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #FFF;
+    }
+
+    .venture-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .venture-footer .time-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      color: var(--secondary-light);
+    }
+
+    /* Kanban Board View */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .kanban-col {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      min-height: 480px;
+    }
+
+    .kanban-col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .kanban-col-header h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kanban-count {
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .kanban-cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .kanban-item {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .kanban-item:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .kanban-item h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #FFF;
+    }
+
+    .kanban-item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    .kanban-actions-row {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .kb-move-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      padding: 3px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .kb-move-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFF;
+    }
+
+    /* Signals Discovery Matrix */
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .signal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      position: relative;
+    }
+
+    .signal-card.high-urgency {
+      border-left: 3px solid #EF4444;
+    }
+
+    .signal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .signal-source-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--secondary-light);
+      background: rgba(99, 102, 241, 0.15);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .signal-wtp {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-light);
+    }
+
+    .signal-quote {
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(11, 15, 23, 0.5);
+      border-left: 2px solid var(--border-subtle);
+      padding: 8px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .signal-suggestion {
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--radius-md);
+      padding: 10px;
+    }
+
+    .signal-suggestion h5 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 2px;
+    }
+
+    .signal-suggestion p {
+      font-size: 0.82rem;
+      color: #E2E8F0;
+    }
+
+    /* Analytics View & SVG Charts */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .chart-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chart-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    svg.interactive-chart {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* AI Evaluator Tool View */
+    .evaluator-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .form-control {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      color: #FFF;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    textarea.form-control {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .result-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .score-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(99, 102, 241, 0.15));
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .score-circle-lg {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 3px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-light);
+    }
+
+    /* Modal System */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      padding: 1.75rem;
+      position: relative;
+      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlide {
+      from { transform: translateY(20px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+
+    .modal-close-btn:hover {
+      color: #FFF;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* Target Presets Grid in Modal */
+    .presets-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .preset-chip {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .preset-chip:hover {
+      border-color: var(--primary);
+      color: var(--primary-light);
+    }
+
+    /* Toast Notification */
+    .toast-notice {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-accent);
+      color: #FFF;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-md);
+      z-index: 300;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toast-notice.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 900px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+      }
+      .analytics-grid, .evaluator-layout {
+        grid-template-columns: 1fr;
+      }
+      .target-arr-card {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 650px) {
+      header.top-nav {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-tabs {
+        overflow-x: auto;
+      }
+      .header-actions {
+        justify-content: space-between;
+      }
+      .ventures-grid, .signals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="top-nav">
+    <div class="brand-group">
+      <div class="brand-logo">S</div>
+      <div>
+        <div class="brand-title">
+          Strat Analytics
+          <span class="badge">Web Edition</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" data-tab="tab-ventures">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        Venture Radar
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-kanban">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Action Pipeline
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-signals">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        Signals Vault
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-analytics">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Portfolio Stats
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-evaluator">
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        AI Evaluator
+      </button>
+    </div>
+
+    <div class="header-actions">
+      <button class="action-btn" id="btn-export-backup" title="Export JSON / Download HTML">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Data / Export
+      </button>
+
+      <button class="action-btn btn-primary" id="btn-open-new-idea">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        New Venture
+      </button>
+
+      <button class="user-pill-btn" id="btn-open-profile">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar-mini" id="header-avatar-img">
+        <span style="font-size: 0.8rem; font-weight: 700;" id="header-username">Akhilesh</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-container">
+
+    <!-- Executive Founder & Target ARR Hero -->
+    <section class="executive-hero">
+      <div class="hero-content">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80" alt="Profile" class="hero-avatar" id="hero-avatar-img">
+        
+        <div class="hero-info">
+          <h1>
+            <span id="hero-name-display">Akhilesh Chutakay</span>
+            <span class="title-badge" id="hero-tier-display">Executive Pro</span>
+          </h1>
+          <div class="hero-bio" id="hero-bio-display">
+            Venture Architect & Angel Strategist • Building high-conviction B2B SaaS & AI automation ventures with validated founder demand and data-driven moats.
+          </div>
+        </div>
+
+        <div class="target-arr-card" id="hero-target-card" style="cursor: pointer;" title="Click to Edit Target ARR Goal">
+          <div class="target-header">
+            <span>Portfolio Target Goal</span>
+            <span style="color: var(--primary-light);">Tap to edit ✎</span>
+          </div>
+          <div class="target-arr-val">
+            <span id="hero-target-val">$1,000,000</span>
+            <span class="target-subtext">ARR</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="hero-progress-bar"></div>
+          </div>
+          <div class="target-footer">
+            <span id="hero-current-arr-label">$0 Current</span>
+            <span id="hero-pct-label" style="color: var(--primary-light);">0% Achieved</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI Summary Row -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">
+          <span>Total Ventures</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-total-ventures">0</div>
+        <div class="kpi-delta">Across all pipeline stages</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">
+          <span>Projected Pipeline ARR</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-total-arr" style="color: var(--primary-light);">$0</div>
+        <div class="kpi-delta" id="kpi-arr-mrr-sub">$0 MRR Equivalent</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">
+          <span>Avg Viability Score</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-avg-score">0 / 100</div>
+        <div class="kpi-delta" style="color: var(--secondary-light);">Demand & Moat Indexed</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">
+          <span>Market Opportunities</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+        </div>
+        <div class="kpi-val" id="kpi-signals-count">0</div>
+        <div class="kpi-delta" style="color: #38BDF8;">Validated Founder Signals</div>
+      </div>
+    </section>
+
+    <!-- VIEW 1: VENTURE RADAR -->
+    <div class="view-content active" id="tab-ventures">
+      <div class="toolbar-section">
+        <div class="search-row">
+          <div class="search-input-box">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="search-input" placeholder="Search ventures by title, target customer, problem, or keywords...">
+          </div>
+
+          <select class="select-dropdown" id="sort-select">
+            <option value="score">Sort by Opportunity Score</option>
+            <option value="arr">Sort by Projected ARR</option>
+            <option value="newest">Sort by Newest Created</option>
+            <option value="weeks">Sort by Shortest MVP Time</option>
+          </select>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="pills-scroll" id="category-pills">
+          <button class="pill-btn active" data-cat="ALL">All Categories</button>
+          <button class="pill-btn" data-cat="B2B_SAAS">B2B SaaS</button>
+          <button class="pill-btn" data-cat="AI_AGENT_TOOL">AI Agent / Workflow</button>
+          <button class="pill-btn" data-cat="MICRO_SAAS">Micro-SaaS</button>
+          <button class="pill-btn" data-cat="B2B_DEVTOOL">DevTool & Infra</button>
+          <button class="pill-btn" data-cat="API_SERVICE">API & Data Service</button>
+          <button class="pill-btn" data-cat="INTERNAL_TOOL">Internal Ops Tool</button>
+          <button class="pill-btn" data-cat="CHROME_EXTENSION">Browser Extension</button>
+          <button class="pill-btn" data-cat="MARKETPLACE">B2B Marketplace</button>
+          <button class="pill-btn" data-cat="PRODUCTIZED_SERVICE">Productized Service</button>
+        </div>
+
+        <!-- Stage Filter Tabs -->
+        <div class="pills-scroll" id="stage-pills" style="margin-top: 4px;">
+          <button class="pill-btn active" data-stage="ALL">All Stages</button>
+          <button class="pill-btn" data-stage="DISCOVERED">Discovered</button>
+          <button class="pill-btn" data-stage="VALIDATING">Validating Demand</button>
+          <button class="pill-btn" data-stage="PROTOTYPING">Prototyping</button>
+          <button class="pill-btn" data-stage="MVP_READY">MVP Ready</button>
+          <button class="pill-btn" data-stage="LAUNCHED">In Market</button>
+        </div>
+      </div>
+
+      <!-- Card Grid -->
+      <div class="ventures-grid" id="ventures-grid"></div>
+    </div>
+
+    <!-- VIEW 2: KANBAN ACTION PIPELINE -->
+    <div class="view-content" id="tab-kanban">
+      <div class="kanban-board" id="kanban-board-container"></div>
+    </div>
+
+    <!-- VIEW 3: SIGNALS DISCOVERY VAULT -->
+    <div class="view-content" id="tab-signals">
+      <div class="toolbar-section">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h2 style="font-size: 1.1rem; font-weight: 800; color: #FFF;">Market Problem & Founder Signal Vault</h2>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Real-world buyer complaints and willingness-to-pay signals mined from Reddit, Twitter, G2, and customer calls.</p>
+          </div>
+          <button class="action-btn btn-primary" id="btn-add-signal">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Log New Signal
+          </button>
+        </div>
+      </div>
+
+      <div class="signals-grid" id="signals-grid"></div>
+    </div>
+
+    <!-- VIEW 4: PORTFOLIO STATS & SVG CHARTS -->
+    <div class="view-content" id="tab-analytics">
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <h3>
+            <span>Stage Funnel Distribution</span>
+            <span style="font-size: 0.75rem; color: var(--primary-light);" id="analytics-total-count">0 Ventures</span>
+          </h3>
+          <div class="chart-container" id="stage-funnel-chart"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>
+            <span>Projected ARR by Category</span>
+            <span style="font-size: 0.75rem; color: var(--secondary-light);">Revenue Weight</span>
+          </h3>
+          <div class="chart-container" id="category-pie-chart"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>
+            <span>Opportunity Score vs. MVP Build Time</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Efficiency Frontier</span>
+          </h3>
+          <div class="chart-container" id="scatter-chart"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>
+            <span>Target ARR Milestone Milestones</span>
+            <span style="font-size: 0.75rem; color: var(--primary-light);">Pace Tracking</span>
+          </h3>
+          <div style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem;" id="milestones-breakdown">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: AI DEAL & IDEA EVALUATOR TOOL -->
+    <div class="view-content" id="tab-evaluator">
+      <div class="evaluator-layout">
+        <div class="form-panel">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
+            <h2 style="font-size: 1.15rem; font-weight: 800; color: #FFF;">AI Venture Architect & Evaluator</h2>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Simulate viability, moat strength, and ARR potential for any raw business idea before writing a line of code.</p>
+
+          <div class="form-group">
+            <label>Idea Title / Concept</label>
+            <input type="text" class="form-control" id="ai-eval-title" placeholder="e.g. Supabase Billing Copilot">
+          </div>
+
+          <div class="form-group">
+            <label>Target Audience & Problem</label>
+            <textarea class="form-control" id="ai-eval-problem" placeholder="Who has this pain? How much do they currently lose?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Proposed Solution & Differentiation</label>
+            <textarea class="form-control" id="ai-eval-solution" placeholder="What is the 10x workflow improvement?"></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label>Target ARPU ($/mo)</label>
+              <input type="number" class="form-control" id="ai-eval-price" value="99">
+            </div>
+            <div class="form-group">
+              <label>Target Customers (Yr 1)</label>
+              <input type="number" class="form-control" id="ai-eval-customers" value="100">
+            </div>
+          </div>
+
+          <button class="action-btn btn-primary" id="btn-run-ai-eval" style="padding: 12px; justify-content: center; font-size: 0.95rem; margin-top: 6px;">
+            ⚡ Run Strategic AI Evaluation
+          </button>
+        </div>
+
+        <div class="result-panel" id="ai-result-panel">
+          <div style="text-align: center; color: var(--text-dim); padding: 4rem 1rem;">
+            <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 1rem auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            <h3 style="font-size: 1.1rem; color: var(--text-muted);">No Active Evaluation</h3>
+            <p style="font-size: 0.85rem; max-width: 320px; margin: 6px auto 0 auto;">Fill out the parameters on the left and tap 'Run Strategic AI Evaluation' to compute market scores and viability metrics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: ADD / EDIT VENTURE IDEA -->
+  <div class="modal-overlay" id="modal-idea-form">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-idea-title">New Venture Idea</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
+      <form id="idea-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="hidden" id="form-idea-id">
+
+        <div class="form-group">
+          <label>Venture Title *</label>
+          <input type="text" class="form-control" id="form-title" required placeholder="e.g. GhostWrite AI for Notion">
+        </div>
+
+        <div class="form-group">
+          <label>Tagline / One-Liner *</label>
+          <input type="text" class="form-control" id="form-tagline" required placeholder="AI workflow agent that drafts founder thought leadership">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label>Business Model Category</label>
+            <select class="form-control" id="form-category">
+              <option value="B2B_SAAS">B2B SaaS</option>
+              <option value="AI_AGENT_TOOL">AI Agent / Workflow</option>
+              <option value="MICRO_SAAS">Micro-SaaS</option>
+              <option value="B2B_DEVTOOL">DevTool & Infra</option>
+              <option value="INTERNAL_TOOL">Internal Ops Tool</option>
+              <option value="API_SERVICE">API & Data Service</option>
+              <option value="CHROME_EXTENSION">Browser Extension</option>
+              <option value="MARKETPLACE">B2B Marketplace</option>
+              <option value="PRODUCTIZED_SERVICE">Productized Service</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Market Type</label>
+            <select class="form-control" id="form-market-type">
+              <option value="BLUE_OCEAN">Blue Ocean (Untapped)</option>
+              <option value="RED_OCEAN">Red Ocean (Existing Demand)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label>Pipeline Stage</label>
+            <select class="form-control" id="form-stage">
+              <option value="DISCOVERED">Discovered</option>
+              <option value="VALIDATING">Validating Demand</option>
+              <option value="PROTOTYPING">Prototyping</option>
+              <option value="MVP_READY">MVP Ready</option>
+              <option value="LAUNCHED">In Market</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Est. Weeks to MVP</label>
+            <input type="number" class="form-control" id="form-weeks" value="4">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Target Audience Persona *</label>
+          <input type="text" class="form-control" id="form-target-audience" required placeholder="e.g. Mid-market Shopify store owners ($1M-$10M GMV)">
+        </div>
+
+        <div class="form-group">
+          <label>Validated Problem Statement *</label>
+          <textarea class="form-control" id="form-problem" required placeholder="What exact pain point does the customer suffer from?"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Proposed Solution Description *</label>
+          <textarea class="form-control" id="form-solution" required placeholder="How does your product solve this 10x better or faster?"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label>Monthly Price Per Customer ($)</label>
+            <input type="number" class="form-control" id="form-price" value="99" step="any">
+          </div>
+
+          <div class="form-group">
+            <label>Target Year 1 Customers</label>
+            <input type="number" class="form-control" id="form-customers" value="100">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tech Stack & Deployment</label>
+          <input type="text" class="form-control" id="form-tech-stack" value="Next.js, Supabase, Gemini API, Stripe, Tailwind">
+        </div>
+
+        <div class="form-group">
+          <label>Unfair Advantage & Moat</label>
+          <input type="text" class="form-control" id="form-moat" placeholder="e.g. Niche-specific workflow, 10x faster setup, native Slack integration">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="action-btn" id="btn-cancel-idea-form">Cancel</button>
+          <button type="submit" class="action-btn btn-primary">Save Venture Idea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: VENTURE DETAIL VIEW -->
+  <div class="modal-overlay" id="modal-idea-detail">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <span class="stage-badge stage-discovered" id="detail-stage-badge">Stage</span>
+          <span class="market-badge market-blue" id="detail-market-badge" style="margin-left: 6px;">Market</span>
+          <h2 id="detail-title" style="margin-top: 6px;">Venture Title</h2>
+          <div id="detail-tagline" style="font-size: 0.88rem; color: var(--text-muted);">Tagline</div>
+        </div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <!-- Metrics Bar -->
+        <div class="venture-metrics-row" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="vm-item">
+            <label>Projected ARR</label>
+            <span id="detail-arr" style="color: var(--primary-light);">$0</span>
+          </div>
+          <div class="vm-item">
+            <label>Monthly MRR</label>
+            <span id="detail-mrr">$0</span>
+          </div>
+          <div class="vm-item">
+            <label>ARPU</label>
+            <span id="detail-arpu">$0/mo</span>
+          </div>
+          <div class="vm-item">
+            <label>Score</label>
+            <span id="detail-score" style="color: var(--secondary-light);">0/100</span>
+          </div>
+        </div>
+
+        <div class="signal-suggestion">
+          <h5>Target Audience</h5>
+          <p id="detail-audience">Persona</p>
+        </div>
+
+        <div>
+          <h4 style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px;">Problem Statement</h4>
+          <p id="detail-problem" style="font-size: 0.9rem; color: #E2E8F0;"></p>
+        </div>
+
+        <div>
+          <h4 style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px;">Solution Description</h4>
+          <p id="detail-solution" style="font-size: 0.9rem; color: #E2E8F0;"></p>
+        </div>
+
+        <div>
+          <h4 style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px;">Moat & Unfair Advantage</h4>
+          <p id="detail-moat" style="font-size: 0.9rem; color: #6EE7B7;"></p>
+        </div>
+
+        <!-- Milestones list -->
+        <div>
+          <h4 style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px;">Execution Roadmap & Action Items</h4>
+          <div id="detail-milestones-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 0.5rem; justify-content: space-between; align-items: center; margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+          <button class="action-btn" id="btn-delete-venture" style="color: #F87171; border-color: rgba(248, 113, 113, 0.3);">
+            Delete Venture
+          </button>
+          
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="action-btn" id="btn-edit-venture">
+              Edit Details
+            </button>
+            <button class="action-btn btn-primary" id="btn-advance-stage">
+              Advance Stage ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TARGET ARR GOAL & PROFILE EDITOR -->
+  <div class="modal-overlay" id="modal-target-arr">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Executive Portfolio & Target ARR</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
+      <form id="target-arr-form" style="display: flex; flex-direction: column; gap: 1.15rem;">
+        <div class="form-group">
+          <label>Target Portfolio ARR ($) — No Upper Limit</label>
+          <input type="text" class="form-control" id="input-target-arr" required placeholder="e.g. 5000000 or 1000000000">
+          <div id="target-preview-text" style="font-size: 0.78rem; color: var(--primary-light); font-weight: 600; margin-top: 4px;">
+            Preview: $1,000,000 ($1.0M ARR)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Quick Target Milestones</label>
+          <div class="presets-row">
+            <button type="button" class="preset-chip" data-val="1000000">$1M</button>
+            <button type="button" class="preset-chip" data-val="5000000">$5M</button>
+            <button type="button" class="preset-chip" data-val="10000000">$10M</button>
+            <button type="button" class="preset-chip" data-val="50000000">$50M</button>
+            <button type="button" class="preset-chip" data-val="100000000">$100M</button>
+            <button type="button" class="preset-chip" data-val="500000000">$500M</button>
+            <button type="button" class="preset-chip" data-val="1000000000">$1B</button>
+            <button type="button" class="preset-chip" data-val="10000000000">$10B</button>
+            <button type="button" class="preset-chip" data-val="100000000000">$100B</button>
+          </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-subtle);">
+
+        <div class="form-group">
+          <label>Executive Name</label>
+          <input type="text" class="form-control" id="input-profile-name" value="Akhilesh Chutakay">
+        </div>
+
+        <div class="form-group">
+          <label>Title & Organization</label>
+          <input type="text" class="form-control" id="input-profile-title" value="Venture Architect & Angel Strategist">
+        </div>
+
+        <div class="form-group">
+          <label>Executive Bio</label>
+          <textarea class="form-control" id="input-profile-bio">Building high-conviction B2B SaaS & AI automation ventures with validated founder demand and data-driven moats.</textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="action-btn modal-cancel-btn">Cancel</button>
+          <button type="submit" class="action-btn btn-primary">Save Profile & Target</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DATA SYNC & EXPORT -->
+  <div class="modal-overlay" id="modal-data-sync">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Data Portability & Export Web App</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid var(--border-accent); border-radius: var(--radius-md); padding: 1rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #FFF; margin-bottom: 4px;">Standalone Web Application Export</h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Download this complete web application as a single self-contained HTML file. You can open it in any browser, host on GitHub Pages, Vercel, Netlify, or deploy to any static server.</p>
+          <button class="action-btn btn-primary" id="btn-download-html" style="margin-top: 10px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download Standalone Website (.html)
+          </button>
+        </div>
+
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #FFF; margin-bottom: 4px;">JSON Portfolio Backup & Android Parity</h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Export or import your full portfolio in JSON schema format compatible with Strat Analytics Android Room backups.</p>
+          <div style="display: flex; gap: 0.5rem; margin-top: 10px;">
+            <button class="action-btn" id="btn-export-json">
+              Export Portfolio JSON
+            </button>
+            <label class="action-btn" style="cursor: pointer;">
+              Import Portfolio JSON
+              <input type="file" id="input-import-json" accept=".json" style="display: none;">
+            </label>
+          </div>
+        </div>
+
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-md); padding: 1rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #F87171; margin-bottom: 4px;">Reset to Seed Ventures</h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Restore the original curated venture studio catalog and founder signals.</p>
+          <button class="action-btn" id="btn-reset-data" style="color: #F87171; border-color: rgba(239, 68, 68, 0.4); margin-top: 8px;">
+            Reset Portfolio to Defaults
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification element -->
+  <div class="toast-notice" id="app-toast">
+    <svg width="18" height="18" fill="none" stroke="#34D399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span id="toast-message">Notification message</span>
+  </div>
+
+  <!-- APPLICATION ENGINE JAVASCRIPT -->
+  <script>
+    // --- 1. SEED DATA MATCHING STRAT ANALYTICS ANDROID APP ---
+    const SEED_PROFILE = {
+      name: "Akhilesh Chutakay",
+      title: "Venture Architect & Angel Strategist",
+      organization: "iA Strat Labs",
+      bio: "Building high-conviction B2B SaaS & AI automation ventures with validated founder demand and data-driven moats.",
+      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
+      targetPortfolioARR: 5000000.0,
+      tier: "Executive Pro"
+    };
+
+    const SEED_VENTURES = [
+      {
+        id: 1,
+        title: "DealPulse AI",
+        tagline: "Autonomous M&A and venture diligence agent for boutique angel syndicates",
+        category: "AI_AGENT_TOOL",
+        marketType: "BLUE_OCEAN",
+        stage: "VALIDATING",
+        problemStatement: "Angel investors and boutique funds waste 25+ hours per pitch deck manually verifying TAM claims, founder backgrounds, and cap-table anomalies without Bloomberg-grade analytics.",
+        solutionDescription: "Extracts pitch deck PDFs, parses data room files, checks founder GitHub/X history, and runs automated moat simulations against 4,000 live competitor records.",
+        targetAudience: "Solo General Partners and Angel Syndicates managing $1M–$25M AUM",
+        monthlyPricePerCustomer: 199.0,
+        targetCustomersYear1: 150,
+        estimatedARR: 358200.0,
+        opportunityScore: 92,
+        weeksToMvp: 3,
+        techStack: "Next.js, Supabase, Gemini 3.5 Flash, Stripe",
+        unfairAdvantageMoat: "Proprietary vector database of 4,000+ unlisted micro-SaaS exit multiples.",
+        milestones: [
+          { text: "Build PDF pitch parser & entity extractor", done: true },
+          { text: "Integrate Gemini deal evaluation prompt", done: true },
+          { text: "Pilot with 5 angel syndicate leads", done: false },
+          { text: "Launch self-serve Stripe checkout", done: false }
+        ]
+      },
+      {
+        id: 2,
+        title: "FinFlow API Guard",
+        tagline: "Real-time Stripe & Paddle webhook latency and failed billing auto-recovery",
+        category: "B2B_DEVTOOL",
+        marketType: "BLUE_OCEAN",
+        stage: "MVP_READY",
+        problemStatement: "SaaS companies lose 4-9% of monthly recurring revenue to silent dunning errors, expired virtual cards, and unhandled webhook dropouts.",
+        solutionDescription: "Plug-and-play webhook proxy that intercepts payment events, predicts churn risks, and triggers smart multi-rail recovery flows with 0 engineering setup.",
+        targetAudience: "Bootstrapped B2B SaaS with $20k–$300k MRR",
+        monthlyPricePerCustomer: 149.0,
+        targetCustomersYear1: 220,
+        estimatedARR: 393360.0,
+        opportunityScore: 89,
+        weeksToMvp: 4,
+        techStack: "Cloudflare Workers, Rust, Postgres, Stripe Webhooks",
+        unfairAdvantageMoat: "Zero-latency edge routing with sub-5ms overhead.",
+        milestones: [
+          { text: "Edge proxy webhook interceptor", done: true },
+          { text: "Dunning retry algorithm", done: true },
+          { text: "Stripe App Store listing verification", done: true },
+          { text: "Public product launch", done: false }
+        ]
+      },
+      {
+        id: 3,
+        title: "OmniSignal B2B",
+        tagline: "High-intent buyer discovery engine tracking executive role changes and tooling complaints",
+        category: "B2B_SAAS",
+        marketType: "BLUE_OCEAN",
+        stage: "PROTOTYPING",
+        problemStatement: "B2B sales teams send thousands of cold emails that get ignored because they have no visibility into when a target buyer is actively frustrated with legacy tools.",
+        solutionDescription: "Continuously tracks G2 complaints, Reddit subthreads, and LinkedIn job openings to alert sales teams within 10 minutes of buyer urgency spikes.",
+        targetAudience: "Mid-market B2B SDR teams and Account Executives",
+        monthlyPricePerCustomer: 299.0,
+        targetCustomersYear1: 180,
+        estimatedARR: 645840.0,
+        opportunityScore: 94,
+        weeksToMvp: 6,
+        techStack: "Python, FastAPI, Gemini API, Pinecone, Vue.js",
+        unfairAdvantageMoat: "Real-time crawler with intent classification across 20+ niche communities.",
+        milestones: [
+          { text: "Reddit & G2 complaint scraper", done: true },
+          { text: "AI intent qualification model", done: true },
+          { text: "Slack webhook notifications for SDRs", done: false },
+          { text: "Salesforce / HubSpot two-way sync", done: false }
+        ]
+      },
+      {
+        id: 4,
+        title: "EcoTransit Fleet API",
+        tagline: "EU ESG carbon compliance & route optimization engine for regional logistics",
+        category: "API_SERVICE",
+        marketType: "RED_OCEAN",
+        stage: "DISCOVERED",
+        problemStatement: "New EU climate regulations require medium trucking fleets to report verified emissions per shipment, but legacy ERPs charge over $50k for compliance modules.",
+        solutionDescription: "Lightweight REST API that takes vehicle GPS data, applies standard GLEC framework emission formulas, and generates certified audit reports.",
+        targetAudience: "Regional trucking and 3PL carriers in the EU",
+        monthlyPricePerCustomer: 249.0,
+        targetCustomersYear1: 120,
+        estimatedARR: 358560.0,
+        opportunityScore: 81,
+        weeksToMvp: 5,
+        techStack: "Go, TimescaleDB, AWS Lambda, React",
+        unfairAdvantageMoat: "Pre-certified templates under EU CSRD reporting standards.",
+        milestones: [
+          { text: "Telematics GPS parser", done: true },
+          { text: "GLEC emission formula verification", done: false },
+          { text: "Carrier pilot with 10 vehicles", done: false }
+        ]
+      },
+      {
+        id: 5,
+        title: "DocuForge Chrome",
+        tagline: "Browser extension that converts Jira & Slack threads into customer-facing release notes",
+        category: "CHROME_EXTENSION",
+        marketType: "BLUE_OCEAN",
+        stage: "LAUNCHED",
+        problemStatement: "Product managers spend 4 hours every release sprint rewriting engineer PR summaries into polished changelogs and customer emails.",
+        solutionDescription: "One-click browser extension that reads GitHub PRs and Jira tickets, summarizes impact in non-technical language, and pushes to Headway or Slack.",
+        targetAudience: "Product Managers and solo SaaS builders",
+        monthlyPricePerCustomer: 29.0,
+        targetCustomersYear1: 850,
+        estimatedARR: 295800.0,
+        opportunityScore: 86,
+        weeksToMvp: 2,
+        techStack: "Chrome Extension Manifest V3, Webpack, Tailwind, Gemini API",
+        unfairAdvantageMoat: "In-browser native context without requiring GitHub admin tokens.",
+        milestones: [
+          { text: "Chrome Web Store approved v1", done: true },
+          { text: "Notion & Headway push integrations", done: true },
+          { text: "Referred 100 paid users", done: true },
+          { text: "Affiliate referral loop", done: false }
+        ]
+      }
+    ];
+
+    const SEED_SIGNALS = [
+      {
+        id: 1,
+        problemTitle: "HubSpot API Webhook Drops during High-Volume Sync",
+        rawQuote: "'We lost 40+ inbound enterprise leads yesterday because HubSpot's webhook delivery silently timed out and our Zapier task halted without alert.'",
+        source: "r/SaaS on Reddit",
+        niche: "RevOps & CRM",
+        wtpMonthly: 199.0,
+        urgency: "Critical",
+        suggestion: "Webhook failover buffer that automatically retries and caches CRM payloads."
+      },
+      {
+        id: 2,
+        problemTitle: "SOC2 Compliance Evidence Collector for Micro-SaaS",
+        rawQuote: "'Vanta and Drata cost $15,000/yr which is literally half our seed budget. We just need an automated screenshot/access audit tool for 5 people.'",
+        source: "X / Twitter Founder Pain",
+        niche: "Security & Compliance",
+        wtpMonthly: 149.0,
+        urgency: "High",
+        suggestion: "Lightweight zero-fluff AWS/GitHub evidence scraper targeting pre-Series A teams."
+      },
+      {
+        id: 3,
+        problemTitle: "AI SDR Cold Emails Landing in Google Workspace Spam",
+        rawQuote: "'Google's new bulk sender rules crushed our domain deliverability. Our open rates collapsed from 42% to 6% in 3 weeks.'",
+        source: "Customer Discovery Interview",
+        niche: "Sales Tech",
+        wtpMonthly: 299.0,
+        urgency: "High",
+        suggestion: "Reputation warmup balancer that fragments outreach across rotating Google Workspace secondary inboxes."
+      }
+    ];
+
+    // --- 2. STATE STORE ---
+    class StratStore {
+      constructor() {
+        this.load();
+      }
+
+      load() {
+        try {
+          const profileStr = localStorage.getItem("strat_profile");
+          this.profile = profileStr ? JSON.parse(profileStr) : { ...SEED_PROFILE };
+
+          const venturesStr = localStorage.getItem("strat_ventures");
+          this.ventures = venturesStr ? JSON.parse(venturesStr) : [ ...SEED_VENTURES ];
+
+          const signalsStr = localStorage.getItem("strat_signals");
+          this.signals = signalsStr ? JSON.parse(signalsStr) : [ ...SEED_SIGNALS ];
+        } catch (e) {
+          console.error("Failed to load from storage, using seed data", e);
+          this.profile = { ...SEED_PROFILE };
+          this.ventures = [ ...SEED_VENTURES ];
+          this.signals = [ ...SEED_SIGNALS ];
+        }
+      }
+
+      save() {
+        localStorage.setItem("strat_profile", JSON.stringify(this.profile));
+        localStorage.setItem("strat_ventures", JSON.stringify(this.ventures));
+        localStorage.setItem("strat_signals", JSON.stringify(this.signals));
+      }
+
+      reset() {
+        this.profile = { ...SEED_PROFILE };
+        this.ventures = [ ...SEED_VENTURES ];
+        this.signals = [ ...SEED_SIGNALS ];
+        this.save();
+      }
+
+      addVenture(venture) {
+        venture.id = Date.now();
+        if (!venture.milestones) {
+          venture.milestones = [
+            { text: "Validate demand with 10 target buyers", done: false },
+            { text: "Build MVP core workflow", done: false },
+            { text: "Launch self-serve onboarding & checkout", done: false }
+          ];
+        }
+        this.ventures.unshift(venture);
+        this.save();
+      }
+
+      updateVenture(id, updatedFields) {
+        const index = this.ventures.findIndex(v => v.id === id);
+        if (index !== -1) {
+          this.ventures[index] = { ...this.ventures[index], ...updatedFields };
+          this.save();
+        }
+      }
+
+      deleteVenture(id) {
+        this.ventures = this.ventures.filter(v => v.id !== id);
+        this.save();
+      }
+
+      addSignal(signal) {
+        signal.id = Date.now();
+        this.signals.unshift(signal);
+        this.save();
+      }
+
+      getStats() {
+        const total = this.ventures.length;
+        const totalARR = this.ventures.reduce((acc, v) => acc + (v.estimatedARR || 0), 0);
+        const totalMRR = totalARR / 12;
+        const avgScore = total > 0 ? Math.round(this.ventures.reduce((acc, v) => acc + (v.opportunityScore || 70), 0) / total) : 0;
+        const signalsCount = this.signals.length;
+
+        const targetARR = this.profile.targetPortfolioARR || 1000000.0;
+        const progressPct = targetARR > 0 ? (totalARR / targetARR) * 100 : 0;
+
+        return { total, totalARR, totalMRR, avgScore, signalsCount, targetARR, progressPct };
+      }
+    }
+
+    const store = new StratStore();
+
+    // --- 3. CURRENCY & NUMBER UTILITIES ---
+    function formatCurrency(amount) {
+      if (!amount || isNaN(amount)) return "$0";
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(amount);
+    }
+
+    function formatCompactCurrency(amount) {
+      if (!amount || isNaN(amount)) return "$0";
+      if (amount >= 1e12) return "$" + (amount / 1e12).toFixed(1) + "T";
+      if (amount >= 1e9) return "$" + (amount / 1e9).toFixed(1) + "B";
+      if (amount >= 1e6) return "$" + (amount / 1e6).toFixed(1) + "M";
+      if (amount >= 1e3) return "$" + (amount / 1e3).toFixed(1) + "k";
+      return "$" + Math.round(amount);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("app-toast");
+      document.getElementById("toast-message").textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    // --- 4. RENDERERS ---
+    let activeCategory = "ALL";
+    let activeStage = "ALL";
+    let searchQuery = "";
+    let activeSort = "score";
+    let selectedVentureId = null;
+
+    function renderHero() {
+      const stats = store.getStats();
+      const p = store.profile;
+
+      document.getElementById("hero-name-display").textContent = p.name;
+      document.getElementById("header-username").textContent = p.name.split(" ")[0];
+      document.getElementById("hero-tier-display").textContent = p.tier || "Executive Pro";
+      document.getElementById("hero-bio-display").textContent = `${p.title} • ${p.bio}`;
+      if (p.avatarUrl) {
+        document.getElementById("hero-avatar-img").src = p.avatarUrl;
+        document.getElementById("header-avatar-img").src = p.avatarUrl;
+      }
+
+      document.getElementById("hero-target-val").textContent = formatCurrency(stats.targetARR);
+      document.getElementById("hero-current-arr-label").textContent = `${formatCompactCurrency(stats.totalARR)} Projected`;
+      
+      const cappedProgress = Math.min(100, Math.max(0, stats.progressPct));
+      document.getElementById("hero-progress-bar").style.width = `${cappedProgress}%`;
+
+      const pctDisplay = stats.progressPct >= 1000 ? `${Math.round(stats.progressPct)}%` : `${stats.progressPct.toFixed(1)}%`;
+      document.getElementById("hero-pct-label").textContent = `${pctDisplay} Achieved`;
+
+      // Update KPIs
+      document.getElementById("kpi-total-ventures").textContent = stats.total;
+      document.getElementById("kpi-total-arr").textContent = formatCurrency(stats.totalARR);
+      document.getElementById("kpi-arr-mrr-sub").textContent = `${formatCompactCurrency(stats.totalMRR)} MRR Equivalent`;
+      document.getElementById("kpi-avg-score").textContent = `${stats.avgScore} / 100`;
+      document.getElementById("kpi-signals-count").textContent = stats.signalsCount;
+    }
+
+    function renderVenturesGrid() {
+      const grid = document.getElementById("ventures-grid");
+      let list = [ ...store.ventures ];
+
+      // Search Filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        list = list.filter(v =>
+          (v.title && v.title.toLowerCase().includes(q)) ||
+          (v.tagline && v.tagline.toLowerCase().includes(q)) ||
+          (v.problemStatement && v.problemStatement.toLowerCase().includes(q)) ||
+          (v.targetAudience && v.targetAudience.toLowerCase().includes(q))
+        );
+      }
+
+      // Category Filter
+      if (activeCategory !== "ALL") {
+        list = list.filter(v => v.category === activeCategory);
+      }
+
+      // Stage Filter
+      if (activeStage !== "ALL") {
+        list = list.filter(v => v.stage === activeStage);
+      }
+
+      // Sorting
+      if (activeSort === "score") {
+        list.sort((a, b) => (b.opportunityScore || 0) - (a.opportunityScore || 0));
+      } else if (activeSort === "arr") {
+        list.sort((a, b) => (b.estimatedARR || 0) - (a.estimatedARR || 0));
+      } else if (activeSort === "newest") {
+        list.sort((a, b) => b.id - a.id);
+      } else if (activeSort === "weeks") {
+        list.sort((a, b) => (a.weeksToMvp || 4) - (b.weeksToMvp || 4));
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-dim);">
+            <svg width="44" height="44" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 0.75rem auto; display: block;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h3 style="font-size: 1.1rem; color: var(--text-muted);">No ventures match this filter</h3>
+            <p style="font-size: 0.85rem; margin-top: 4px;">Try clearing filters or click "+ New Venture" to add one.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = list.map(v => {
+        const stageClass = `stage-${(v.stage || "discovered").toLowerCase().replace("_", "")}`;
+        const isBlue = v.marketType === "BLUE_OCEAN";
+
+        return `
+          <div class="venture-card" onclick="openVentureDetail(${v.id})">
+            <div>
+              <div class="venture-card-header">
+                <div class="badge-cluster">
+                  <span class="stage-badge ${stageClass}">${v.stage ? v.stage.replace("_", " ") : "DISCOVERED"}</span>
+                  <span class="market-badge ${isBlue ? 'market-blue' : 'market-red'}">${isBlue ? 'Blue Ocean' : 'Red Ocean'}</span>
+                </div>
+                <div class="score-circle" title="Opportunity Score">${v.opportunityScore || 80}</div>
+              </div>
+
+              <h3 class="venture-title">${escapeHtml(v.title)}</h3>
+              <p class="venture-tagline">${escapeHtml(v.tagline || v.problemStatement || "")}</p>
+            </div>
+
+            <div>
+              <div class="venture-metrics-row">
+                <div class="vm-item">
+                  <label>Projected ARR</label>
+                  <span style="color: var(--primary-light);">${formatCurrency(v.estimatedARR)}</span>
+                </div>
+                <div class="vm-item">
+                  <label>Price / Unit</label>
+                  <span>$${v.monthlyPricePerCustomer || 99}/mo</span>
+                </div>
+              </div>
+
+              <div class="venture-footer" style="margin-top: 8px;">
+                <span class="time-pill">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  ${v.weeksToMvp || 4} wks to MVP
+                </span>
+                <span>${v.category ? v.category.replace(/_/g, " ") : "SaaS"}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderKanban() {
+      const container = document.getElementById("kanban-board-container");
+      const stages = [
+        { key: "DISCOVERED", label: "Discovered" },
+        { key: "VALIDATING", label: "Validating Demand" },
+        { key: "PROTOTYPING", label: "Prototyping" },
+        { key: "MVP_READY", label: "MVP Ready" },
+        { key: "LAUNCHED", label: "In Market" }
+      ];
+
+      container.innerHTML = stages.map((st, colIndex) => {
+        const colVentures = store.ventures.filter(v => v.stage === st.key);
+        return `
+          <div class="kanban-col">
+            <div class="kanban-col-header">
+              <h3>${st.label}</h3>
+              <span class="kanban-count">${colVentures.length}</span>
+            </div>
+
+            <div class="kanban-cards-stack">
+              ${colVentures.length === 0 ? '<div style="font-size: 0.78rem; color: var(--text-dim); text-align: center; padding: 2rem 0;">Empty stage</div>' : ''}
+              ${colVentures.map(v => `
+                <div class="kanban-item">
+                  <div onclick="openVentureDetail(${v.id})">
+                    <span class="stage-badge stage-discovered" style="font-size: 0.65rem;">${v.category || "B2B SaaS"}</span>
+                    <h4 style="margin-top: 4px;">${escapeHtml(v.title)}</h4>
+                    <div class="kanban-item-footer" style="margin-top: 6px;">
+                      <span>${formatCompactCurrency(v.estimatedARR)} ARR</span>
+                      <span style="color: var(--secondary-light); font-size: 0.7rem;">${v.opportunityScore || 80} pts</span>
+                    </div>
+                  </div>
+
+                  <div class="kanban-actions-row">
+                    ${colIndex > 0 ? `<button class="kb-move-btn" onclick="moveStage(${v.id}, '${stages[colIndex - 1].key}')">◀ Back</button>` : ''}
+                    ${colIndex < stages.length - 1 ? `<button class="kb-move-btn" onclick="moveStage(${v.id}, '${stages[colIndex + 1].key}')">Next ▶</button>` : ''}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderSignals() {
+      const grid = document.getElementById("signals-grid");
+      grid.innerHTML = store.signals.map(s => `
+        <div class="signal-card ${s.urgency === 'Critical' ? 'high-urgency' : ''}">
+          <div class="signal-header">
+            <span class="signal-source-tag">${escapeHtml(s.source)}</span>
+            <span class="signal-wtp">WTP: ~$${s.wtpMonthly}/mo</span>
+          </div>
+
+          <h3 style="font-size: 1rem; font-weight: 700; color: #FFF;">${escapeHtml(s.problemTitle)}</h3>
+          <div class="signal-quote">${escapeHtml(s.rawQuote)}</div>
+
+          <div class="signal-suggestion">
+            <h5>Suggested Venture Opportunity</h5>
+            <p>${escapeHtml(s.suggestion)}</p>
+          </div>
+
+          <button class="action-btn" onclick="convertSignalToVenture(${s.id})" style="align-self: flex-start; margin-top: 4px; font-size: 0.78rem;">
+            Convert to Venture Idea ➔
+          </button>
+        </div>
+      `).join("");
+    }
+
+    function renderAnalytics() {
+      const stats = store.getStats();
+      document.getElementById("analytics-total-count").textContent = `${stats.total} Active Ventures`;
+
+      // 1. Stage Funnel SVG Chart
+      const stages = [
+        { label: "Discovered", count: store.ventures.filter(v => v.stage === "DISCOVERED").length },
+        { label: "Validating", count: store.ventures.filter(v => v.stage === "VALIDATING").length },
+        { label: "Prototyping", count: store.ventures.filter(v => v.stage === "PROTOTYPING").length },
+        { label: "MVP Ready", count: store.ventures.filter(v => v.stage === "MVP_READY").length },
+        { label: "In Market", count: store.ventures.filter(v => v.stage === "LAUNCHED").length }
+      ];
+
+      const maxCount = Math.max(1, ...stages.map(s => s.count));
+      const funnelSvg = `
+        <svg class="interactive-chart" viewBox="0 0 400 200">
+          ${stages.map((st, i) => {
+            const barWidth = (st.count / maxCount) * 260;
+            const y = 25 + i * 35;
+            return `
+              <text x="10" y="${y + 14}" fill="#94A3B8" font-size="12" font-weight="600">${st.label}</text>
+              <rect x="100" y="${y}" width="260" height="18" rx="6" fill="#1E293B"/>
+              <rect x="100" y="${y}" width="${barWidth}" height="18" rx="6" fill="url(#emeraldGrad)"/>
+              <text x="${105 + barWidth}" y="${y + 14}" fill="#34D399" font-size="12" font-weight="700">${st.count}</text>
+            `;
+          }).join("")}
+          <defs>
+            <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#10B981" />
+              <stop offset="100%" stop-color="#34D399" />
+            </linearGradient>
+          </defs>
+        </svg>
+      `;
+      document.getElementById("stage-funnel-chart").innerHTML = funnelSvg;
+
+      // 2. Category ARR Pie / Bar Chart
+      const categoriesMap = {};
+      store.ventures.forEach(v => {
+        const cat = v.category ? v.category.replace(/_/g, " ") : "SaaS";
+        categoriesMap[cat] = (categoriesMap[cat] || 0) + (v.estimatedARR || 0);
+      });
+
+      const catEntries = Object.entries(categoriesMap);
+      const totalCatARR = Object.values(categoriesMap).reduce((a, b) => a + b, 0) || 1;
+      
+      const pieSvg = `
+        <svg class="interactive-chart" viewBox="0 0 400 200">
+          ${catEntries.slice(0, 5).map(([cat, arr], i) => {
+            const pct = Math.round((arr / totalCatARR) * 100);
+            const y = 25 + i * 35;
+            const barW = (arr / totalCatARR) * 240;
+            return `
+              <text x="10" y="${y + 14}" fill="#94A3B8" font-size="11" font-weight="600">${cat.substring(0, 14)}</text>
+              <rect x="110" y="${y}" width="240" height="18" rx="6" fill="#1E293B"/>
+              <rect x="110" y="${y}" width="${barW}" height="18" rx="6" fill="#6366F1"/>
+              <text x="${115 + barW}" y="${y + 14}" fill="#818CF8" font-size="11" font-weight="700">${formatCompactCurrency(arr)} (${pct}%)</text>
+            `;
+          }).join("")}
+        </svg>
+      `;
+      document.getElementById("category-pie-chart").innerHTML = pieSvg;
+
+      // 3. Scatter Plot (Opportunity vs MVP Weeks)
+      const scatterSvg = `
+        <svg class="interactive-chart" viewBox="0 0 400 200">
+          <line x1="40" y1="170" x2="380" y2="170" stroke="#334155" stroke-width="1.5"/>
+          <line x1="40" y1="20" x2="40" y2="170" stroke="#334155" stroke-width="1.5"/>
+          <text x="320" y="190" fill="#64748B" font-size="10">Weeks to MVP ➔</text>
+          <text x="10" y="25" fill="#64748B" font-size="10">Score</text>
+
+          ${store.ventures.map(v => {
+            const weeks = Math.min(10, Math.max(1, v.weeksToMvp || 4));
+            const score = Math.min(100, Math.max(50, v.opportunityScore || 75));
+            const cx = 50 + (weeks / 10) * 310;
+            const cy = 170 - ((score - 50) / 50) * 140;
+            return `
+              <circle cx="${cx}" cy="${cy}" r="6" fill="#10B981" stroke="#34D399" stroke-width="2" opacity="0.9" style="cursor: pointer;">
+                <title>${v.title} (${score} pts, ${weeks} wks)</title>
+              </circle>
+            `;
+          }).join("")}
+        </svg>
+      `;
+      document.getElementById("scatter-chart").innerHTML = scatterSvg;
+
+      // 4. Milestone Roadmaps
+      const milestonesContainer = document.getElementById("milestones-breakdown");
+      const milestones = [
+        { label: "Phase 1: Founder Signal Validation ($0 - $100k)", reached: stats.totalARR >= 100000 },
+        { label: "Phase 2: Product-Market Fit Core ($100k - $500k)", reached: stats.totalARR >= 500000 },
+        { label: "Phase 3: Scale Engine Active ($500k - $1M)", reached: stats.totalARR >= 1000000 },
+        { label: "Phase 4: Executive Target Goal", reached: stats.totalARR >= stats.targetARR }
+      ];
+
+      milestonesContainer.innerHTML = milestones.map(m => `
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: ${m.reached ? '#34D399' : '#94A3B8'};">
+          <div style="width: 18px; height: 18px; border-radius: 50%; background: ${m.reached ? '#10B981' : '#1E293B'}; border: 1.5px solid ${m.reached ? '#34D399' : '#475569'}; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #FFF; font-weight: 700;">
+            ${m.reached ? '✓' : ''}
+          </div>
+          <span style="font-weight: ${m.reached ? '700' : '500'};">${m.label}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderAll() {
+      renderHero();
+      renderVenturesGrid();
+      renderKanban();
+      renderSignals();
+      renderAnalytics();
+    }
+
+    // --- 5. INTERACTIVE ACTIONS & MODALS ---
+    function openVentureDetail(id) {
+      const v = store.ventures.find(item => item.id === id);
+      if (!v) return;
+      selectedVentureId = id;
+
+      document.getElementById("detail-title").textContent = v.title;
+      document.getElementById("detail-tagline").textContent = v.tagline || v.problemStatement || "";
+      document.getElementById("detail-stage-badge").textContent = v.stage ? v.stage.replace("_", " ") : "DISCOVERED";
+      document.getElementById("detail-market-badge").textContent = v.marketType === "BLUE_OCEAN" ? "Blue Ocean" : "Red Ocean";
+      document.getElementById("detail-arr").textContent = formatCurrency(v.estimatedARR);
+      document.getElementById("detail-mrr").textContent = formatCurrency((v.estimatedARR || 0) / 12);
+      document.getElementById("detail-arpu").textContent = `$${v.monthlyPricePerCustomer || 99}/mo`;
+      document.getElementById("detail-score").textContent = `${v.opportunityScore || 80}/100`;
+
+      document.getElementById("detail-audience").textContent = v.targetAudience || "General B2B Buyers";
+      document.getElementById("detail-problem").textContent = v.problemStatement || "Not specified";
+      document.getElementById("detail-solution").textContent = v.solutionDescription || "Not specified";
+      document.getElementById("detail-moat").textContent = v.unfairAdvantageMoat || "Fast iteration speed and direct customer pipeline";
+
+      const msContainer = document.getElementById("detail-milestones-list");
+      const milestones = v.milestones || [
+        { text: "Define core MVP user story", done: true },
+        { text: "Ship pilot prototype", done: false }
+      ];
+
+      msContainer.innerHTML = milestones.map((m, idx) => `
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #E2E8F0; cursor: pointer;">
+          <input type="checkbox" ${m.done ? 'checked' : ''} onchange="toggleMilestone(${v.id}, ${idx})">
+          <span style="${m.done ? 'text-decoration: line-through; color: var(--text-dim);' : ''}">${escapeHtml(m.text)}</span>
+        </label>
+      `).join("");
+
+      openModal("modal-idea-detail");
+    }
+
+    function toggleMilestone(ventureId, index) {
+      const v = store.ventures.find(item => item.id === ventureId);
+      if (v && v.milestones && v.milestones[index]) {
+        v.milestones[index].done = !v.milestones[index].done;
+        store.save();
+        renderAll();
+        openVentureDetail(ventureId);
+      }
+    }
+
+    function moveStage(id, newStage) {
+      store.updateVenture(id, { stage: newStage });
+      renderAll();
+      showToast(`Moved to ${newStage.replace("_", " ")}`);
+    }
+
+    function convertSignalToVenture(signalId) {
+      const s = store.signals.find(item => item.id === signalId);
+      if (!s) return;
+
+      document.getElementById("form-idea-id").value = "";
+      document.getElementById("form-title").value = s.suggestedToolIdea || s.problemTitle;
+      document.getElementById("form-tagline").value = `Automated solution addressing ${s.problemTitle}`;
+      document.getElementById("form-problem").value = s.rawQuote;
+      document.getElementById("form-solution").value = s.suggestion;
+      document.getElementById("form-target-audience").value = `${s.niche} Founders and Teams`;
+      document.getElementById("form-price").value = s.wtpMonthly || 99;
+      document.getElementById("form-stage").value = "VALIDATING";
+
+      openModal("modal-idea-form");
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("active");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("active");
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // --- 6. EVENT BINDINGS & INIT ---
+    document.addEventListener("DOMContentLoaded", () => {
+      renderAll();
+
+      // Tab Navigation
+      document.querySelectorAll(".nav-tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".nav-tab-btn").forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".view-content").forEach(v => v.classList.remove("active"));
+
+          btn.classList.add("active");
+          const targetTab = btn.getAttribute("data-tab");
+          document.getElementById(targetTab).classList.add("active");
+        });
+      });
+
+      // Category filter pills
+      document.querySelectorAll("#category-pills .pill-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("#category-pills .pill-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeCategory = btn.getAttribute("data-cat");
+          renderVenturesGrid();
+        });
+      });
+
+      // Stage filter pills
+      document.querySelectorAll("#stage-pills .pill-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("#stage-pills .pill-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeStage = btn.getAttribute("data-stage");
+          renderVenturesGrid();
+        });
+      });
+
+      // Search and Sort
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderVenturesGrid();
+      });
+
+      document.getElementById("sort-select").addEventListener("change", (e) => {
+        activeSort = e.target.value;
+        renderVenturesGrid();
+      });
+
+      // Open Modals
+      document.getElementById("btn-open-new-idea").addEventListener("click", () => {
+        document.getElementById("idea-form").reset();
+        document.getElementById("form-idea-id").value = "";
+        document.getElementById("modal-idea-title").textContent = "New Venture Idea";
+        openModal("modal-idea-form");
+      });
+
+      document.getElementById("hero-target-card").addEventListener("click", () => {
+        const p = store.profile;
+        document.getElementById("input-target-arr").value = p.targetPortfolioARR ? Math.round(p.targetPortfolioARR).toString() : "1000000";
+        document.getElementById("input-profile-name").value = p.name;
+        document.getElementById("input-profile-title").value = p.title;
+        document.getElementById("input-profile-bio").value = p.bio;
+        updateTargetPreview();
+        openModal("modal-target-arr");
+      });
+
+      document.getElementById("btn-open-profile").addEventListener("click", () => {
+        document.getElementById("hero-target-card").click();
+      });
+
+      document.getElementById("btn-export-backup").addEventListener("click", () => {
+        openModal("modal-data-sync");
+      });
+
+      // Modal close handlers
+      document.querySelectorAll(".modal-close-btn, .modal-cancel-btn, #btn-cancel-idea-form").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+        });
+      });
+
+      // Preset Target Chips
+      document.querySelectorAll(".preset-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          const val = chip.getAttribute("data-val");
+          document.getElementById("input-target-arr").value = val;
+          updateTargetPreview();
+        });
+      });
+
+      document.getElementById("input-target-arr").addEventListener("input", updateTargetPreview);
+
+      function updateTargetPreview() {
+        const valStr = document.getElementById("input-target-arr").value.replace(/[^0-9.]/g, "");
+        const num = parseFloat(valStr);
+        if (!isNaN(num) && num > 0) {
+          document.getElementById("target-preview-text").textContent = `Preview: ${formatCurrency(num)} (${formatCompactCurrency(num)} ARR)`;
+        } else {
+          document.getElementById("target-preview-text").textContent = "Enter numerical target with no numeral limit";
+        }
+      }
+
+      // Target ARR & Profile Form Submit
+      document.getElementById("target-arr-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const rawTarget = document.getElementById("input-target-arr").value.replace(/[^0-9.]/g, "");
+        const parsedTarget = parseFloat(rawTarget) || 1000000.0;
+
+        store.profile.targetPortfolioARR = parsedTarget;
+        store.profile.name = document.getElementById("input-profile-name").value || "Founder";
+        store.profile.title = document.getElementById("input-profile-title").value || "Venture Architect";
+        store.profile.bio = document.getElementById("input-profile-bio").value || "";
+
+        store.save();
+        renderAll();
+        closeModal("modal-target-arr");
+        showToast("Profile & Target ARR Goal Saved!");
+      });
+
+      // Idea Form Submit (Create or Update)
+      document.getElementById("idea-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const editId = document.getElementById("form-idea-id").value;
+        const price = parseFloat(document.getElementById("form-price").value) || 99.0;
+        const customers = parseInt(document.getElementById("form-customers").value) || 100;
+        const estimatedARR = price * customers * 12;
+
+        const ventureData = {
+          title: document.getElementById("form-title").value,
+          tagline: document.getElementById("form-tagline").value,
+          category: document.getElementById("form-category").value,
+          marketType: document.getElementById("form-market-type").value,
+          stage: document.getElementById("form-stage").value,
+          weeksToMvp: parseInt(document.getElementById("form-weeks").value) || 4,
+          targetAudience: document.getElementById("form-target-audience").value,
+          problemStatement: document.getElementById("form-problem").value,
+          solutionDescription: document.getElementById("form-solution").value,
+          monthlyPricePerCustomer: price,
+          targetCustomersYear1: customers,
+          estimatedARR: estimatedARR,
+          techStack: document.getElementById("form-tech-stack").value,
+          unfairAdvantageMoat: document.getElementById("form-moat").value,
+          opportunityScore: Math.floor(Math.random() * 15) + 82
+        };
+
+        if (editId) {
+          store.updateVenture(parseInt(editId), ventureData);
+          showToast("Venture updated successfully!");
+        } else {
+          store.addVenture(ventureData);
+          showToast("New venture added to portfolio!");
+        }
+
+        closeModal("modal-idea-form");
+        renderAll();
+      });
+
+      // Detail Actions
+      document.getElementById("btn-edit-venture").addEventListener("click", () => {
+        if (!selectedVentureId) return;
+        const v = store.ventures.find(item => item.id === selectedVentureId);
+        if (!v) return;
+
+        closeModal("modal-idea-detail");
+        document.getElementById("form-idea-id").value = v.id;
+        document.getElementById("form-title").value = v.title;
+        document.getElementById("form-tagline").value = v.tagline || "";
+        document.getElementById("form-category").value = v.category || "B2B_SAAS";
+        document.getElementById("form-market-type").value = v.marketType || "BLUE_OCEAN";
+        document.getElementById("form-stage").value = v.stage || "DISCOVERED";
+        document.getElementById("form-weeks").value = v.weeksToMvp || 4;
+        document.getElementById("form-target-audience").value = v.targetAudience || "";
+        document.getElementById("form-problem").value = v.problemStatement || "";
+        document.getElementById("form-solution").value = v.solutionDescription || "";
+        document.getElementById("form-price").value = v.monthlyPricePerCustomer || 99;
+        document.getElementById("form-customers").value = v.targetCustomersYear1 || 100;
+        document.getElementById("form-techStack").value = v.techStack || "";
+        document.getElementById("form-moat").value = v.unfairAdvantageMoat || "";
+
+        document.getElementById("modal-idea-title").textContent = "Edit Venture Idea";
+        openModal("modal-idea-form");
+      });
+
+      document.getElementById("btn-delete-venture").addEventListener("click", () => {
+        if (!selectedVentureId) return;
+        if (confirm("Are you sure you want to remove this venture from your portfolio?")) {
+          store.deleteVenture(selectedVentureId);
+          closeModal("modal-idea-detail");
+          renderAll();
+          showToast("Venture removed");
+        }
+      });
+
+      document.getElementById("btn-advance-stage").addEventListener("click", () => {
+        if (!selectedVentureId) return;
+        const v = store.ventures.find(item => item.id === selectedVentureId);
+        if (!v) return;
+
+        const stageProgression = ["DISCOVERED", "VALIDATING", "PROTOTYPING", "MVP_READY", "LAUNCHED"];
+        const currentIndex = stageProgression.indexOf(v.stage || "DISCOVERED");
+        if (currentIndex < stageProgression.length - 1) {
+          const nextStage = stageProgression[currentIndex + 1];
+          moveStage(v.id, nextStage);
+          openVentureDetail(v.id);
+        } else {
+          showToast("Venture is already In Market!");
+        }
+      });
+
+      // Data Backup & Export Controls
+      document.getElementById("btn-download-html").addEventListener("click", () => {
+        const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "strat_analytics_web_companion.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("Downloaded standalone website bundle!");
+      });
+
+      document.getElementById("btn-export-json").addEventListener("click", () => {
+        const backupData = {
+          version: "1.2.0",
+          exportDate: new Date().toISOString(),
+          profile: store.profile,
+          ideas: store.ventures,
+          signals: store.signals
+        };
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `strat_portfolio_backup_${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("JSON backup exported!");
+      });
+
+      document.getElementById("input-import-json").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (data.ideas && Array.isArray(data.ideas)) {
+              store.ventures = data.ideas;
+            }
+            if (data.profile) {
+              store.profile = { ...store.profile, ...data.profile };
+            }
+            if (data.signals && Array.isArray(data.signals)) {
+              store.signals = data.signals;
+            }
+            store.save();
+            renderAll();
+            closeModal("modal-data-sync");
+            showToast("Portfolio successfully imported!");
+          } catch (err) {
+            alert("Invalid JSON file format: " + err.message);
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      document.getElementById("btn-reset-data").addEventListener("click", () => {
+        if (confirm("Reset all ventures and signals back to default catalog?")) {
+          store.reset();
+          renderAll();
+          closeModal("modal-data-sync");
+          showToast("Portfolio restored to initial defaults.");
+        }
+      });
+
+      // AI Evaluator Simulator
+      document.getElementById("btn-run-ai-eval").addEventListener("click", () => {
+        const title = document.getElementById("ai-eval-title").value.trim() || "Untitled Opportunity";
+        const problem = document.getElementById("ai-eval-problem").value.trim();
+        const solution = document.getElementById("ai-eval-solution").value.trim();
+        const price = parseFloat(document.getElementById("ai-eval-price").value) || 99;
+        const customers = parseInt(document.getElementById("ai-eval-customers").value) || 100;
+        const projectedARR = price * customers * 12;
+
+        const simScore = Math.floor(Math.random() * 12) + 84;
+        const simWeeks = Math.floor(Math.random() * 3) + 3;
+
+        const resultHtml = `
+          <div class="score-banner">
+            <div class="score-circle-lg">${simScore}</div>
+            <div>
+              <h3 style="font-size: 1.15rem; color: #FFF; font-weight: 800;">Strategic Viability: Highly Favorable</h3>
+              <p style="font-size: 0.82rem; color: var(--primary-light);">Projected ${formatCompactCurrency(projectedARR)} ARR with ${simWeeks}-week MVP timeline</p>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div class="signal-suggestion">
+              <h5>Market Timing & Blue Ocean Index</h5>
+              <p>Strong willingness-to-pay signal. Uncontested entry path if positioned as a native workflow layer rather than an all-in-one suite.</p>
+            </div>
+
+            <div class="signal-suggestion" style="border-color: rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.08);">
+              <h5 style="color: var(--secondary-light);">Strategic Recommendation</h5>
+              <p>Build zero-code landing page + pre-order checkout first. Validate 5 paid pre-orders before completing the backend.</p>
+            </div>
+
+            <button class="action-btn btn-primary" id="btn-save-ai-venture" style="justify-content: center; padding: 12px; margin-top: 6px;">
+              + Add "${escapeHtml(title)}" to Portfolio Pipeline
+            </button>
+          </div>
+        `;
+
+        document.getElementById("ai-result-panel").innerHTML = resultHtml;
+
+        document.getElementById("btn-save-ai-venture").addEventListener("click", () => {
+          store.addVenture({
+            title: title,
+            tagline: `Validated via Strat AI Evaluator: ${solution.substring(0, 80)}`,
+            category: "AI_AGENT_TOOL",
+            marketType: "BLUE_OCEAN",
+            stage: "VALIDATING",
+            problemStatement: problem || "Identified market workflow friction",
+            solutionDescription: solution || "Targeted micro-solution with high unit economics",
+            monthlyPricePerCustomer: price,
+            targetCustomersYear1: customers,
+            estimatedARR: projectedARR,
+            opportunityScore: simScore,
+            weeksToMvp: simWeeks
+          });
+          renderAll();
+          showToast(`Added "${title}" to your venture radar!`);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
